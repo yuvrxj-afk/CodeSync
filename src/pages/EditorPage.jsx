@@ -7,11 +7,7 @@ const EditorPage = () => {
   const [clients, setClients] = useState([
     { socketId: '123', username: 'test' },
     { socketId: '23', username: 'dftes t' },
-    { socketId: '3', username: 'fsdftest' }, { socketId: '123', username: 'test' },
-    { socketId: '23e', username: 'dftes t' },
-    { socketId: '3w', username: 'efsdftest' }, { socketId: '123', username: 'test' },
-    { socketId: '223', username: 'dftes t' },
-    { socketId: '3', username: 'qfsdftest' },
+    { socketId: '3', username: 'fsdftest' },
   ])
   return (
     <div className="main-Wrapper">
@@ -44,7 +40,7 @@ const EditorPage = () => {
           <h4>EXIT</h4>
           </button>
       </div>
-      <div className="editor-Wrapper"><Editor /></div>
+      <div className="editor-Wrapper"><Editor/></div>
     </div>
   )
 }

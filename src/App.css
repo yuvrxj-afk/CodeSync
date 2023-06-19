@@ -147,7 +147,7 @@ footer h4 {
 }
 .copy {
   font-size: 1.2rem;
-  background-color: #5e24da;
+  background-color: #8e67e4;
   color: #fff;
   font-weight: bold;
   padding: 5px;
@@ -170,4 +170,12 @@ footer h4 {
   flex-direction: row;
   gap: 10px;
   align-items: center;
+}
+.CodeMirror{
+  font-size: 18px;
+  min-height: 100vh;
+  line-height: 1.6;
+  padding-top: 20px;
+  word-spacing: 4px;
+  letter-spacing: 0.3px;
 }
