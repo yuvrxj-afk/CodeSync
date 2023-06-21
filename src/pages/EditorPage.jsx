@@ -1,9 +1,26 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import User from '../components/User'
 import Editor from '../components/Editor'
+import { initSocket } from '../socket'
+import { useLocation } from 'react-router-dom'
+import { ACTIONS } from '../actions'
 
 const EditorPage = () => {
+  const socketRef = useRef(null);
+  const location = useLocation();
+  useEffect(() => {
+    const init = async () => {
+      socketRef.current = await initSocket();
+      // socketRef.current.emit(ACTIONS.JOIN, {
+      //   roomId ,
+      //   username: location.state?.username
+      // })
+    }
+    init();
+  }, [])
+
+
   const [clients, setClients] = useState([
     { socketId: '123', username: 'test' },
     { socketId: '23', username: 'dftes t' },
@@ -36,11 +53,11 @@ const EditorPage = () => {
           <h4>ROOM ID</h4>
         </button>
         <button className="btn exit">
-        <img src="/exit.png" alt="" />
+          <img src="/exit.png" alt="" />
           <h4>EXIT</h4>
-          </button>
+        </button>
       </div>
-      <div className="editor-Wrapper"><Editor/></div>
+      <div className="editor-Wrapper"><Editor /></div>
     </div>
   )
 }
