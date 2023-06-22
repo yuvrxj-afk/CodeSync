@@ -7,7 +7,7 @@ import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/lib/codemirror.css';
 
 const Editor = () => {
-
+  
   useEffect(() => {
     async function init() {
       CodeMirror.fromTextArea(document.getElementById("codeEditor"), {
