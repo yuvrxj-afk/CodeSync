@@ -29,7 +29,15 @@ io.on('connection', (socket) => {
         userSocketMap[socket.id] = username // 'Anonymous';
         socket.join(roomId);
         const clients = getAllConnectedClients(roomId);
-        console.log(clients)
+        // console.log(clients)
+        clients.forEach(({ socketId }) => {
+            io.to(socketId).emit(ACTIONS.JOINED, {
+                clients,
+                username,
+                socketId: socket.id, 
+            }
+            )
+        })
     })
 
 }
