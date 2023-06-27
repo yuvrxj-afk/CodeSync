@@ -28,7 +28,7 @@ const EditorPage = () => {
       }
 
       socketRef.current.emit(ACTIONS.JOIN, {
-        // roomId,
+        roomId,
         username: location.state?.username
       })
     }
