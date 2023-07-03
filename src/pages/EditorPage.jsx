@@ -39,12 +39,26 @@ const EditorPage = () => {
         ({ clients, username, socketId }) => {
           if (username !== location.state?.username) {
             toast.success(`${username} joined the room`)
-            console.log(`${username} joined the room`);
+            // console.log(`${username} joined the room`);
           }
           setClients(clients)
         })
+
+      // Listening for DISCONNECTED event
+      socketRef.current.on(
+        ACTIONS.DISCONNECTED, 
+        ({ socketId, username }) => {
+        toast.success(`${username} left the room`)
+        setClients((prev) => {
+          return prev.filter((client) => client.socketId !== socketId)
+        })
+      })
     }
     init();
+    return () =>{
+      socketRef.current.disconnect();
+      socketRef.current.off(ACTIONS.JOINED,ACTIONS.DISCONNECTED);
+    }
   }, [])
 
 
