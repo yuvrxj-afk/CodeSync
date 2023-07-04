@@ -46,18 +46,19 @@ const EditorPage = () => {
 
       // Listening for DISCONNECTED event
       socketRef.current.on(
-        ACTIONS.DISCONNECTED, 
+        ACTIONS.DISCONNECTED,
         ({ socketId, username }) => {
-        toast.success(`${username} left the room`)
-        setClients((prev) => {
-          return prev.filter((client) => client.socketId !== socketId)
+          toast.success(`${username} left the room`)
+          setClients((prev) => {
+            return prev.filter((client) => client.socketId !== socketId)
+          })
         })
-      })
     }
     init();
-    return () =>{
+    return () => {
       socketRef.current.disconnect();
-      socketRef.current.off(ACTIONS.JOINED,ACTIONS.DISCONNECTED);
+      socketRef.current.off(ACTIONS.JOINED);
+      socketRef.current.off(ACTIONS.DISCONNECTED);
     }
   }, [])
 
@@ -99,7 +100,7 @@ const EditorPage = () => {
           <h4>EXIT</h4>
         </button>
       </div>
-      <div className="editor-Wrapper"><Editor /></div>
+      <div className="editor-Wrapper"><Editor socketRef={socketRef} roomId={roomId} /></div>
     </div>
   )
 }
