@@ -40,6 +40,13 @@ io.on('connection', (socket) => {
         })
     })
 
+    //  Code change
+
+    socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+        // console.log('receiving', code);
+        socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code })
+    })
+
     socket.on('disconnecting', () => {
         const rooms = [...socket.rooms]
         rooms.forEach((roomId) => {
@@ -47,7 +54,7 @@ io.on('connection', (socket) => {
                 socketId: socket.id,
                 username: userSocketMap[socket.id]
             })
-        })  
+        })
         delete userSocketMap[socket.id];
         socket.leave();
     })
