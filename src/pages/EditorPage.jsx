@@ -15,6 +15,16 @@ const EditorPage = () => {
   const { roomId } = useParams();
   const [clients, setClients] = useState([])
 
+  function copyRoomId  ()  {
+    navigator.clipboard.writeText(roomId);
+    toast.success('Room ID copied to clipboard')
+  }
+
+  function exitRoom ()  {
+    socketRef.current.disconnect();
+    reactNavigator('/')
+  }
+
   // console.log('roomId', roomId);
 
   useEffect(() => {
@@ -91,11 +101,11 @@ const EditorPage = () => {
             }
           </div>
         </div>
-        <button className="btn copy">
+        <button className="btn copy" onClick={copyRoomId}>
           <img src="/copy.png" alt="" />
           <h4>ROOM ID</h4>
         </button>
-        <button className="btn exit">
+        <button className="btn exit" onClick={exitRoom}>
           <img src="/exit.png" alt="" />
           <h4>EXIT</h4>
         </button>
