@@ -14,13 +14,14 @@ const EditorPage = () => {
   const reactNavigator = useNavigate();
   const { roomId } = useParams();
   const [clients, setClients] = useState([])
+  const codeRef = useRef(null);
 
-  function copyRoomId  ()  {
+  function copyRoomId() {
     navigator.clipboard.writeText(roomId);
     toast.success('Room ID copied to clipboard')
   }
 
-  function exitRoom ()  {
+  function exitRoom() {
     socketRef.current.disconnect();
     reactNavigator('/')
   }
@@ -52,67 +53,73 @@ const EditorPage = () => {
             // console.log(`${username} joined the room`);
           }
           setClients(clients)
-        })
+          socketRef.current.emit(ACTIONS.SYNC_CODE, { code: codeRef.current , socketId});
+        }
+    )
 
-      // Listening for DISCONNECTED event
-      socketRef.current.on(
-        ACTIONS.DISCONNECTED,
-        ({ socketId, username }) => {
-          toast.success(`${username} left the room`)
-          setClients((prev) => {
-            return prev.filter((client) => client.socketId !== socketId)
-          })
-        })
-    }
-    init();
-    return () => {
-      socketRef.current.disconnect();
-      socketRef.current.off(ACTIONS.JOINED);
-      socketRef.current.off(ACTIONS.DISCONNECTED);
-    }
+  // Listening for DISCONNECTED event
+  socketRef.current.on(
+    ACTIONS.DISCONNECTED,
+    ({ socketId, username }) => {
+      toast.success(`${username} left the room`)
+      setClients((prev) => {
+        return prev.filter((client) => client.socketId !== socketId)
+      })
+    })
+}
+init();
+return () => {
+  socketRef.current.disconnect();
+  socketRef.current.off(ACTIONS.JOINED);
+  socketRef.current.off(ACTIONS.DISCONNECTED);
+}
   }, [])
 
 
 
 
-  if (!location.state) {
-    return <Navigate to='/' />
-  }
+if (!location.state) {
+  return <Navigate to='/' />
+}
 
-  return (
-    <div className="main-Wrapper">
-      <div className="sidebar">
-        <div className="sidebar-body">
-          <div className="logo">
-            <img src="/logo.png" className="logoImage" alt="" />
-          </div>
-          <div className="online">
-            <h3>CONNECTED</h3>
-            <img src="/online.png" alt="" />
-          </div>
-          <div className="users-list">
-            {
-              clients.map((client) => (
-                <User
-                  key={client.socketId}
-                  username={client.username}
-                />
-              ))
-            }
-          </div>
+return (
+  <div className="main-Wrapper">
+    <div className="sidebar">
+      <div className="sidebar-body">
+        <div className="logo">
+          <img src="/logo.png" className="logoImage" alt="" />
         </div>
-        <button className="btn copy" onClick={copyRoomId}>
-          <img src="/copy.png" alt="" />
-          <h4>ROOM ID</h4>
-        </button>
-        <button className="btn exit" onClick={exitRoom}>
-          <img src="/exit.png" alt="" />
-          <h4>EXIT</h4>
-        </button>
+        <div className="online">
+          <h3>CONNECTED</h3>
+          <img src="/online.png" alt="" />
+        </div>
+        <div className="users-list">
+          {
+            clients.map((client) => (
+              <User
+                key={client.socketId}
+                username={client.username}
+              />
+            ))
+          }
+        </div>
       </div>
-      <div className="editor-Wrapper"><Editor socketRef={socketRef} roomId={roomId} /></div>
+      <button className="btn copy" onClick={copyRoomId}>
+        <img src="/copy.png" alt="" />
+        <h4>ROOM ID</h4>
+      </button>
+      <button className="btn exit" onClick={exitRoom}>
+        <img src="/exit.png" alt="" />
+        <h4>EXIT</h4>
+      </button>
     </div>
-  )
+    <div className="editor-Wrapper"><Editor socketRef={socketRef}
+      onCodeChange={(code) => {
+        codeRef.current = code;
+      }}
+      roomId={roomId} /></div>
+  </div>
+)
 }
 
 export default EditorPage
